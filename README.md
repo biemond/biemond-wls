@@ -10,6 +10,7 @@ Should work for Solaris x86 64, Windows, RedHat, CentOS, Ubuntu, Debian, Suse SL
 Version updates
 ---------------
 
+- 1.1.1 updated license to Apache 2.0    
 - 1.1.0 Low on entropy fix with new urandomfix class, add rngd or rng-tools service which adds urandom, removed java.security.egd parameter    
 - 1.0.10 createUser param in installwls,installadf(12.1.2) and installjdev when you want to create the OS user and group yourself  
 - 1.0.9 replaced sleep with waitforcompletion parameter  
@@ -39,7 +40,7 @@ can cause certain operations to be very slow. Encryption operations need entropy
 
 If an encryption operation is missing entropy it will wait until enough is generated.
 
-three options 
+three options  
   use rngd service (use this wls::urandomfix class)  
   set java.security in JDK ( jre/lib/security in my jdk7 module )  
   set -Djava.security.egd=file:/dev/./urandom param 
@@ -66,6 +67,7 @@ else you can use $puppetDownloadMntPoint => "/mnt" or "puppet:///modules/wls/" (
 WLS WebLogic Features
 ---------------------------
 
+- low on entropy fix ( urandom ) by rngd or rng-tools service  
 - installs WebLogic 10g,11g,12c ( 12.1.1 & 12.1.2 )
 - apply bsu patch ( WebLogic Patch )
 - installs Oracle ADF 11g & 12c ( 12.1.2)
