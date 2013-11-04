@@ -11,6 +11,9 @@ Should work for Solaris x86 64, Windows, RedHat, CentOS, Ubuntu, Debian, Suse SL
 
 Version updates
 ---------------
+
+- 1.2.7 Windows fixes. 
+- 1.2.6 Webtier installation and associate domain with the Oracle HTTP server. 
 - 1.2.5 WebLogic domains also supports Prod mode, set Nodemanager security. 
 - 1.2.4 JMS Quota creation, Datasource now supports extra JDBC properties, fixed ruby warning with not escaped chars + arrays in erb files 
 - 1.2.3 Wlscontrol support starting of managed servers  
@@ -71,8 +74,8 @@ When having a Domain on multiple servers you can use the copydomain class, this 
 for sshpass you need to install epel yum repository, do this by installing "puppet module install stahnma/epel"  
 for a complete multinode cluster example see example_conf_2_multi_node_domain_with_cluster.txt located in your wls module home at the puppet master or look at the my github repos https://github.com/biemond/puppet/tree/master/modules/wls   
 
-Everything on 1 machine ( WebLogic 12.1.2 (ADF + Coherence )& Database 12c)
----------------------------------------------------------------------------
+Everything on 1 machine WebLogic 12.1.2 (ADF + Coherence)& Database 12c
+-----------------------------------------------------------------------
 When you want a FMW WebLogic Domain and a Database with a RCU on 1 machine you can look at the following example see example_conf_1_server_with_wls12.1.2_ora_db12c.txt located in your wls module home at the puppet master or look at the my github repos https://github.com/biemond/puppet/tree/master/modules/wls   
 
 Standard WebLogic 10.3.6 cluster on 2 nodes
@@ -92,6 +95,11 @@ Standard WebLogic 10.3.6 server + BSU Patch with 11g PS6 of Webcenter portal & c
 ----------------------------------------------------------------------------------------------------------------
 see example_conf_5_weblogic_10.3.6_webcenter_portal_content_ps6.txt located in your wls module home at the puppet master or look at the my github repos https://github.com/biemond/puppet/tree/master/modules/wls  
 
+Standard WebLogic 12.1.2 windows server with a domain ( no ADF or FMW )
+------------------------------------------------------------------------
+see example_conf_6_server_wls12.1.2_windows_standard.txt located in your wls module home at the puppet master or look at the my github repos https://github.com/biemond/puppet/tree/master/modules/wls
+
+
 
 WLS WebLogic Features
 ---------------------------
@@ -102,6 +110,7 @@ WLS WebLogic Features
 - installs Oracle Soa Suite 11g
 - installs Oracle Webcenter 11g
 - installs Oracle Webcenter Content 11g
+- installs Oracle Webtier and associate domain
 - apply Oracle patch ( OPatch for Oracle products )
 - installs Oracle JDeveloper 11g / 12.1.2 + SOA Suite plugin
 - configures and starts nodemanager
@@ -111,12 +120,13 @@ WLS WebLogic Features
 - add JCA resource adapter plan + Entries
 - create Machines, Managed Servers, Clusters, Server templates, Dynamic Clusters, Coherence clusters ( all 12.1.2 )
 - create File or JDBC Persistence Store
-- create JMS Server, Module, SubDeployment, Quota, Connection Factory, JMS (distributed) Queue or Topic,Foreign Servers + entries  
+- create JMS Server, Module, SubDeployment, Quota, Connection Factory, JMS (distributed) Queue or Topic,Foreign Servers + entries
 - create SAF agents, SAF Remote Destinations, SAF Imported Destinations, SAF objects
 - basically can run every WLST script with the flexible WLST define manifest
 
-
-- low on entropy fix ( urandom ) by RNGD or RNG-Tools service  
+Other options
+-------------
+- low on entropy fix ( urandom ) by RNGD or RNG-Tools service
 - Multi machine support for a WebLogic domain, can be used for cluster or spreading managed servers
 
 Domain creation options (Dev or Prod mode)
@@ -142,7 +152,7 @@ Contains WebLogic Facter which displays the following: Middleware homes, Oracle 
 
 ![Oracle Puppet Facts](https://raw.github.com/biemond/puppet/master/modules/wls/facts.png)
 
-### My WLS module Files folder ( you need to download it yourself and agree to Oracle Licenses )
+### My WLS module Files folder, you need to download it yourself and agree to the Oracle (Developer) License
 WebLogic 11g + patches: wls1036_generic.jar, p13573621_1036_Generic.zip, p14736139_1036_Generic.zip  
 WebLogic 12.1.2: wls_121200.jar, fmw_infra_121200.jar  
 IDE: jdevstudio11117install.jar, soa-jdev-extension_11117.zip, oepe-indigo-all-in-one-11.1.1.8.0.201110211138-linux-gtk-x86_64.zip  
@@ -276,7 +286,7 @@ WebLogic configuration examples
            $user         = "oracle"
            $group        = "dba"
            $downloadDir  = "/data/install/"
-           $logsDir      = "/data/logs"   
+           $logDir      = "/data/logs"   
          }
          windows: { 
            $osOracleHome = "c:/oracle"
@@ -286,7 +296,7 @@ WebLogic configuration examples
            $group        = "Administrators"
            $serviceName  = "C_oracle_wls11g_wlserver_10.3"
            $downloadDir  = "c:/temp"
-           $logsDir      = "c:/oracle/logs" 
+           $logDir      = "c:/oracle/logs" 
          }
       }
 
@@ -410,7 +420,7 @@ WebLogic configuration examples
        #nodemanager configuration and starting
        wls::nodemanager{'nodemanager11g':
          listenPort  => '5556',
-         logDir      => $logsDir,
+         logDir      => $logDir,
          require     =>  Wls::Installsoa['soaPS6'],
        }
     
@@ -437,7 +447,7 @@ WebLogic configuration examples
          $user         = "oracle"
          $group        = "dba"
          $downloadDir  = "/data/install"
-         $logsDir      = "/data/logs"       
+         $logDir       = "/data/logs"       
        }
        windows: { 
          $osOracleHome = "c:/oracle/middleware"
@@ -447,7 +457,7 @@ WebLogic configuration examples
          $group        = "Administrators"
          $serviceName  = "C_oracle_middleware_wls11g_wlserver_10.3"
          $downloadDir  = "c:/temp"
-         $logsDir      = "c:/oracle/logs" 
+         $logDir       = "c:/oracle/logs" 
        }
     }
   
@@ -547,7 +557,7 @@ WebLogic configuration examples
     #nodemanager configuration and starting
     wls::nodemanager{'nodemanager11g':
       listenPort  => '5556',
-      logDir      => $logsDir,
+      logDir      => $logDir,
       require     => Wls::Installsoa['soaPS6'],
     }
     }
