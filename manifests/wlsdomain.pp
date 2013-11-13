@@ -234,10 +234,11 @@ if ( $continue ) {
              }
         File {
                ensure  => present,
-               replace => 'yes',
+               replace => true,
                mode    => 0775,
                owner   => $user,
                group   => $group,
+               backup  => false,
              }
      }
      Solaris: {
@@ -255,10 +256,11 @@ if ( $continue ) {
              }
         File {
                ensure  => present,
-               replace => 'yes',
+               replace => true,
                mode    => 0775,
                owner   => $user,
                group   => $group,
+               backup  => false,
              }
 
      }
@@ -274,8 +276,9 @@ if ( $continue ) {
                logoutput => true,
              }
         File { ensure  => present,
-               replace => 'yes',
+               replace => true,
                mode    => 0777,
+               backup  => false,
              }
      }
    }
@@ -415,7 +418,7 @@ if ( $continue ) {
       }
    }
 
-   $packCommand    = "-domain=${domainPath}/${domain} -template=${path}/domain_${domain}.jar -template_name=domain_${domain} -log=${path}/domain_${domain}.log -log_priority=INFO"
+#   $packCommand    = "-domain=${domainPath}/${domain} -template=${path}/domain_${domain}.jar -template_name=domain_${domain} -log=${path}/domain_${domain}.log -log_priority=INFO"
 
    case $operatingsystem {
      CentOS, RedHat, OracleLinux, Ubuntu, Debian, SLES, Solaris: {
@@ -472,11 +475,11 @@ if ( $continue ) {
            }
         }
 
-        exec { "pack domain ${domain} ${title}":
-           command     => "${wlHome}/common/bin/pack.sh ${packCommand}",
-           require     => Exec["setDebugFlagOnFalse ${domain} ${title}"],
-           creates     => "${path}/domain_${domain}.jar",
-        }
+#        exec { "pack domain ${domain} ${title}":
+#           command     => "${wlHome}/common/bin/pack.sh ${packCommand}",
+#           require     => Exec["setDebugFlagOnFalse ${domain} ${title}"],
+#           creates     => "${path}/domain_${domain}.jar",
+#        }
 
      }
      windows: {
@@ -503,11 +506,11 @@ if ( $continue ) {
            require   => Exec["icacls domain ${title}"],
           }
 
-        exec { "pack domain ${domain} ${title}":
-           command     => "C:\\Windows\\System32\\cmd.exe /c ${wlHome}/common/bin/pack.cmd ${packCommand}",
-           require   => Exec["icacls domain ${title}"],
-           creates     => "${path}/domain_${domain}.jar",
-        }
+#        exec { "pack domain ${domain} ${title}":
+#           command     => "C:\\Windows\\System32\\cmd.exe /c ${wlHome}/common/bin/pack.cmd ${packCommand}",
+#           require   => Exec["icacls domain ${title}"],
+#           creates     => "${path}/domain_${domain}.jar",
+#        }
      }
    }
 
@@ -552,7 +555,7 @@ if ( $continue ) {
                               File["nodemanager.properties ux 1212 ${title}"]],
               logoutput   => true,
             }
-         } 
+         }
        }
      }
 }
