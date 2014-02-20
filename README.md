@@ -29,6 +29,8 @@ https://github.com/biemond/biemond-wls-vagrant-wc
 Version updates
 ---------------
 
+- 1.3.8 Option to override the server arguments in the domain templates, small bugfixes.
+- 1.3.7 javaParameters param for installwls ( support for Docker -Dspace.detection=false ,thanks Jyrk )
 - 1.3.6 remoteFile param for BSU,Opatch,SOA Suite, WebCenter, WebCenter Content and OIM 
 - 1.3.5 Nodemanager fix, Added AdminServer startup properties for Nodemanager, Readme update for OIM,OAM
 - 1.3.4 Nodemanager listen address, Domain ALSBdebug param check, remoteFile param for installwls ( for vagrant), managed server listen address, logdir fixes in copydomain & nodemanager, packdomain permissions fix, option to use copydomain without sshpass
@@ -83,6 +85,8 @@ Other options
 Domain creation options (Dev or Prod mode)
 ------------------------------------------
 all templates creates a WebLogic domain, logs the domain creation output  
+you can override the default server arguments by adding the following parameter to wlsdomain  
+java_arguments = { "ADM" => "...", "OSB" => "...", "SOA" => "...", "BAM" => "...","OAM" => "....","OIM" => "...."}  
 
 - domain 'standard'    -> a default WebLogic    
 - domain 'adf'         -> JRF + EM + Coherence (12.1.2) + OWSM (12.1.2) + JAX-WS Advanced + Soap over JMS (12.1.2)   
@@ -892,6 +896,7 @@ WebLogic configuration examples
       domain          => $wlsDomainName,
       adminListenPort => $adminListenPort,
       nodemanagerPort => $nodemanagerPort,
+      java_arguments  => { "ADM" => "-XX:PermSize=256m -XX:MaxPermSize=512m -Xms1024m -Xmx1024m" },
       wlsUser         => "weblogic",
       password        => hiera('weblogic_password_default'),
       logDir          => $logDir,
